@@ -1,6 +1,8 @@
 import 'package:espoxiapp/pages/setup.dart';
 import 'package:flutter/material.dart';
 
+import 'widgets/settings/settings.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -24,7 +26,13 @@ class MyApp extends StatelessWidget {
         cardColor: Colors.grey[900],
         useMaterial3: true,
       ),
-      home: const SetupPage(),
+      initialRoute: '/',
+      routes: {
+        // When navigating to the "/" route, build the FirstScreen widget.
+        '/': (context) => const SetupPage(),
+        // When navigating to the "/second" route, build the SecondScreen widget.
+        '/settings': (context) => const SettingsPage(),
+      },
     );
   }
 }

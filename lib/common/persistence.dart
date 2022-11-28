@@ -9,8 +9,8 @@ Future<String> get _localPath async {
 }
 
 Future<File> _localFile(String path) async {
-  final rpath = await _localPath;
-  return File('$rpath/$path');
+  final rootPath = await _localPath;
+  return File('$rootPath/$path');
 }
 
 Future<T?> retrieve<T>(
@@ -29,12 +29,12 @@ Future<void> store<T extends Storable>(T data, String path) async {
   await file.writeAsString(jsonEncode(data.toJson()));
 }
 
-Future<void> store_raw(String data, String path) async {
+Future<void> storeRaw(String data, String path) async {
   final file = await _localFile(path);
   await file.writeAsString(data);
 }
 
-Future<String?> retrieve_raw(String path) async {
+Future<String?> retrieveRaw(String path) async {
   try {
     final file = await _localFile(path);
     return await file.readAsString();

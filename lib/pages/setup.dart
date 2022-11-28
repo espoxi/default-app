@@ -16,12 +16,12 @@ class SetupPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: retrieve(Credentials.fromJson, WIFICREDENTIALPATH),
+        future: retrieveRaw(ADDRESSPATH),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             switch (snapshot.data) {
               case null:
-                return ActualSetupPage();
+                return const ActualSetupPage();
               default:
                 return const HomePage();
             }
@@ -221,7 +221,12 @@ class _ActualSetupPageState extends State<ActualSetupPage> {
       });
       // await Future.delayed(const Duration(milliseconds: 100));
       await store(creds, WIFICREDENTIALPATH);
-      await store_raw(address.address, ADDRESSPATH);
+      await storeRaw(address.address, ADDRESSPATH);
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomePage()),
+      );
     }
   }
 }

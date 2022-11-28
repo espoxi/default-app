@@ -4,6 +4,9 @@ import 'package:espoxiapp/config.dart';
 import 'package:http/http.dart' as http;
 import 'package:espoxiapp/data/wifi.dart';
 
+import 'common/persistence.dart';
+import 'pages/setup.dart';
+
 class Connection {
   static final Connection _singleton = Connection._internal();
 
@@ -11,13 +14,23 @@ class Connection {
     return _singleton;
   }
 
-  Connection._internal();
+  Connection._internal() {
+    retrieveRaw(ADDRESSPATH).then((value) {
+      if (value != null) {
+        _address = InternetAddress(value);
+      }
+    });
+  }
 
   InternetAddress? _address;
+  InternetAddress? get address => _address;
+  void set address(InternetAddress? address) {
+    _address = address;
+    storeRaw(address.toString(), ADDRESSPATH);
+  }
+
   Future<InternetAddress?> connectEspoxiToWifi(Credentials creds) async {
-    if (_address != null) {
-      return _address!;
-    }
+    if (_address != null) {}
     http.post(
       Uri.parse('${DEFAULTURL}connect'),
       body: jsonEncode(creds.toJson()),
