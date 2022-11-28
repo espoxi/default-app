@@ -18,16 +18,22 @@ class Connection {
     if (_address != null) {
       return _address!;
     }
-    await http.post(Uri.parse('${DEFAULTURL}connect'), body: creds.toJson());
+    http.post(
+      Uri.parse('${DEFAULTURL}connect'),
+      body: jsonEncode(creds.toJson()),
+      headers: {"Content-Type": "application/json"},
+    );
     for (int i = 0; i < 10; i++) {
       try {
-        var res = await http.get(Uri.parse('${DEFAULTURL}ip'));
+        var res = await http.get(Uri.parse('${DEFAULTURL}ip')).timeout(
+            Duration(seconds: 2),
+            onTimeout: () => throw Exception('Timeout'));
         if (res.statusCode == 200) {
           _address = InternetAddress(jsonDecode(res.body));
           return _address!;
         }
       } catch (e) {}
-      await Future.delayed(const Duration(seconds: 1));
+      await Future.delayed(const Duration(milliseconds: 200));
     }
     return null;
   }
