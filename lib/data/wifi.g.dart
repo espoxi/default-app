@@ -8,7 +8,7 @@ part of 'wifi.dart';
 
 Credentials _$CredentialsFromJson(Map<String, dynamic> json) => Credentials(
       ssid: json['ssid'] as String,
-      psk: json['psk'] as String,
+      psk: json['psk'] as String?,
     );
 
 Map<String, dynamic> _$CredentialsToJson(Credentials instance) =>

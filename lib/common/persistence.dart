@@ -29,6 +29,25 @@ Future<void> store<T extends Storable>(T data, String path) async {
   await file.writeAsString(jsonEncode(data.toJson()));
 }
 
+Future<void> store_raw(String data, String path) async {
+  final file = await _localFile(path);
+  await file.writeAsString(data);
+}
+
+Future<String?> retrieve_raw(String path) async {
+  try {
+    final file = await _localFile(path);
+    return await file.readAsString();
+  } catch (e) {
+    return null;
+  }
+}
+
+Future<void> delete(String path) async {
+  final file = await _localFile(path);
+  await file.delete();
+}
+
 abstract class Storable {
   Map<String, dynamic> toJson();
 }

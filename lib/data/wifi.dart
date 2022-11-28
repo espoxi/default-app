@@ -5,9 +5,9 @@ part 'wifi.g.dart';
 @JsonSerializable()
 class Credentials implements Storable {
   final String ssid;
-  final String psk;
+  final String? psk;
 
-  const Credentials({required this.ssid, required this.psk});
+  const Credentials({required this.ssid, this.psk});
 
   factory Credentials.fromJson(Map<String, dynamic> json) =>
       _$CredentialsFromJson(json);
