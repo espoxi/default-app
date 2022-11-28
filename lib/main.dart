@@ -1,9 +1,11 @@
+import 'package:espoxiapp/connection.dart';
 import 'package:espoxiapp/pages/setup.dart';
 import 'package:flutter/material.dart';
 
 import 'widgets/settings/settings.dart';
 
-void main() {
+void main() async {
+  await Connection().init();
   runApp(const MyApp());
 }
 

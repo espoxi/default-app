@@ -1,10 +1,42 @@
+import 'package:espoxiapp/connection.dart';
+import 'package:espoxiapp/widgets/mainDrawer.dart';
 import 'package:flutter/material.dart';
+
+import 'effectComposer.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Espoxi'),
+      ),
+      body: Center(
+        child: TextButton(
+            onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FutureBuilder(
+                        future: Connection().getEffects(),
+                        builder: (context, snapshot) {
+                          if (snapshot.data == null) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                          return Composer(
+                            effects: snapshot.data!,
+                            onSaved: (configs) =>
+                                Connection().setEffects(configs),
+                          );
+                        }),
+                  ),
+                ),
+            child: Text('go to composer')),
+      ),
+      drawer: const MainDrawer(),
+    );
   }
 }
