@@ -1,13 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="hannepps.tools.espoxiapp">
+    <!-- Required to fetch data from the internet. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
    <application
         android:label="espoxiapp"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
-        
-        <!-- Required to fetch data from the internet. -->
-        <uses-permission android:name="android.permission.INTERNET" />
-
         <activity
             android:name=".MainActivity"
             android:exported="true"
