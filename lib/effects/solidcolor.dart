@@ -7,7 +7,7 @@ part 'solidcolor.g.dart';
 
 @JsonSerializable()
 class SolidColorConfig implements EffectConfig {
-  SolidColorConfig({required this.color});
+  SolidColorConfig({this.color = Colors.black});
 
   static const String name = 'SolidColor';
 

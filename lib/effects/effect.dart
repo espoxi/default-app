@@ -24,4 +24,17 @@ abstract class EffectConfig {
         return UnknownEffectConfig(json.keys.first, innerJson);
     }
   }
+
+  factory EffectConfig.fromName(String name) {
+    switch (name) {
+      case SolidColorConfig.name:
+        return SolidColorConfig();
+      case HueShiftConfig.name:
+        return HueShiftConfig(degrees_per_led: 0, degrees_per_second: 0);
+      default:
+        return UnknownEffectConfig(name, null);
+    }
+  }
 }
+
+List<String> get allEffectNames => [SolidColorConfig.name, HueShiftConfig.name];

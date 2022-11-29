@@ -74,7 +74,9 @@ class _ComposerState extends State<Composer> {
                   ],
                 ))
             .toList(),
-        //TODO: add a button to add a new effect to the stack (choose from dropdown)
+        NewEffectButton(
+            onSelected: (config) =>
+                setState(() => effects.add(EffectState(config: config)))),
       ]),
       endDrawer: const MainDrawer(),
       floatingActionButton: FloatingActionButton(
@@ -85,6 +87,36 @@ class _ComposerState extends State<Composer> {
         tooltip: 'Save',
         child: const Icon(Icons.save),
       ),
+    );
+  }
+}
+
+class NewEffectButton extends StatelessWidget {
+  const NewEffectButton({super.key, required this.onSelected});
+  final void Function(EffectConfig) onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: () => showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Add new effect'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: allEffectNames
+                .map((name) => TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        onSelected(EffectConfig.fromName(name));
+                      },
+                      child: Text(name),
+                    ))
+                .toList(),
+          ),
+        ),
+      ),
+      icon: const Icon(Icons.add),
     );
   }
 }

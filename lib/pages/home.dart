@@ -27,7 +27,7 @@ class HomePage extends StatelessWidget {
                             );
                           }
                           return Composer(
-                            effects: snapshot.data!,
+                            effects: snapshot.data ?? [],
                             onSaved: (configs) =>
                                 Connection().setEffects(configs),
                           );
