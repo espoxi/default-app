@@ -33,15 +33,18 @@ class SolidColorConfig implements EffectConfig {
       );
 
   @override
-  Widget get preview => Align(
-        alignment: Alignment.centerRight,
-        child: Container(
-          height: 20,
-          width: 20,
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.white, width: 2),
-            color: color,
-            shape: BoxShape.circle,
+  Widget get preview => Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Align(
+          alignment: Alignment.centerRight,
+          child: Container(
+            height: 20,
+            width: 20,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.white, width: 2),
+              color: color,
+              shape: BoxShape.circle,
+            ),
           ),
         ),
       );

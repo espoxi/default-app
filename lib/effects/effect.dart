@@ -1,3 +1,4 @@
+import 'package:espoxiapp/effects/hue.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -17,6 +18,8 @@ abstract class EffectConfig {
     switch (json.keys.first) {
       case SolidColorConfig.name:
         return SolidColorConfig.fromInternalJson(innerJson);
+      case HueShiftConfig.name:
+        return HueShiftConfig.fromInternalJson(innerJson);
       default:
         return UnknownEffectConfig(json.keys.first, innerJson);
     }
