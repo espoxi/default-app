@@ -10,7 +10,11 @@ Future<String> get _localPath async {
 
 Future<File> _localFile(String path) async {
   final rootPath = await _localPath;
-  return File('$rootPath/$path');
+  final file = File('$rootPath/$path');
+  if (!await file.exists()) {
+    await file.create(recursive: true);
+  }
+  return file;
 }
 
 Future<T?> retrieve<T>(
@@ -41,6 +45,12 @@ Future<String?> retrieveRaw(String path) async {
   } catch (e) {
     return null;
   }
+}
+
+Future<void> resetAll() async {
+  final rootPath = await _localPath;
+  final dir = Directory(rootPath);
+  dir.deleteSync(recursive: true);
 }
 
 Future<void> delete(String path) async {

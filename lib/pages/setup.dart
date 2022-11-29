@@ -21,6 +21,7 @@ class SetupPage extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.done) {
             switch (snapshot.data) {
               case null:
+              case '':
                 return const ActualSetupPage();
               default:
                 return const HomePage();
@@ -223,7 +224,7 @@ class _ActualSetupPageState extends State<ActualSetupPage> {
       await store(creds, WIFICREDENTIALPATH);
       await storeRaw(address.address, ADDRESSPATH);
 
-      Navigator.pushReplacement(
+      Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const HomePage()),
       );

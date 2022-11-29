@@ -19,7 +19,7 @@ class Connection {
 
   Future init() async {
     var value = await retrieveRaw(ADDRESSPATH);
-    if (value != null) {
+    if (value != null && value.isNotEmpty) {
       _address = InternetAddress(value);
     }
   }
@@ -68,16 +68,20 @@ class Connection {
 
   Future<InternetAddress?> connectEspoxiToWifi(Credentials creds) async {
     if (_address != null) {}
-    http.post(
-      Uri.parse('${DEFAULTURL}connect'),
-      body: jsonEncode(creds.toJson()),
-      headers: {"Content-Type": "application/json"},
-    );
-    http.post(
-      Uri.parse('${(await saverAddress)!.address}connect'),
-      body: jsonEncode(creds.toJson()),
-      headers: {"Content-Type": "application/json"},
-    );
+
+    try {
+      await http.post(
+        Uri.parse('${DEFAULTURL}connect'),
+        body: jsonEncode(creds.toJson()),
+        headers: {"Content-Type": "application/json"},
+      );
+      http.post(
+        Uri.parse('${(await saverAddress)!.address}connect'),
+        body: jsonEncode(creds.toJson()),
+        headers: {"Content-Type": "application/json"},
+      );
+    } catch (e) {}
+
     for (int i = 0; i < 10; i++) {
       try {
         var res = await http.get(Uri.parse('${DEFAULTURL}ip')).timeout(
@@ -97,6 +101,9 @@ class Connection {
           }
         }
       } catch (e) {}
+      await Future.delayed(const Duration(
+        milliseconds: 300,
+      ));
     }
     return null;
   }

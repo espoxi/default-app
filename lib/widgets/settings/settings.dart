@@ -1,3 +1,4 @@
+import 'package:espoxiapp/common/persistence.dart';
 import 'package:espoxiapp/widgets/settings/ip.dart';
 import 'package:flutter/material.dart';
 
@@ -13,10 +14,14 @@ class SettingsPage extends StatelessWidget {
         title: const Text('Settings'),
       ),
       body: ListView(
-        children: const <Widget>[
-          Padding(
+        children: <Widget>[
+          const Padding(
             padding: EdgeInsets.all(8.0),
             child: IPSettings(),
+          ),
+          TextButton(
+            onPressed: () => resetAll(),
+            child: const Text('factory Reset'),
           ),
         ],
       ),
