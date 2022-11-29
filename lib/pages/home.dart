@@ -21,11 +21,11 @@ class HomePage extends StatelessWidget {
                     builder: (context) => FutureBuilder(
                         future: Connection().getEffects(),
                         builder: (context, snapshot) {
-                          // if (snapshot.data == null) {
-                          //   return const Center(
-                          //     child: CircularProgressIndicator(),
-                          //   );
-                          // }
+                          if (snapshot.data == null) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
                           return Composer(
                             effects: snapshot.data ?? [],
                             onSaved: (configs) =>
@@ -34,7 +34,7 @@ class HomePage extends StatelessWidget {
                         }),
                   ),
                 ),
-            child: Text('go to composer')),
+            child: const Text('go to composer')),
       ),
       drawer: const MainDrawer(),
     );

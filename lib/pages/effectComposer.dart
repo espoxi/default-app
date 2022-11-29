@@ -63,8 +63,10 @@ class _ComposerState extends State<Composer> {
                                               TextDecoration.lineThrough)
                                       : null,
                                 ),
-                                if (!effect.expanded)
-                                  Expanded(child: effect.config.preview),
+                                Expanded(
+                                    child: (!effect.expanded)
+                                        ? effect.config.preview
+                                        : Container()),
                                 IconButton(
                                   icon: const Icon(Icons.delete),
                                   onPressed: () =>
@@ -93,11 +95,14 @@ class _ComposerState extends State<Composer> {
                       .toList(),
                 ]),
           ),
-          NewEffectButton(
-            key: const ValueKey('newEffect'),
-            onSelected: (config) => setState(
-              () => effects.add(
-                EffectState(config: config),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: NewEffectButton(
+              key: const ValueKey('newEffect'),
+              onSelected: (config) => setState(
+                () => effects.add(
+                  EffectState(config: config),
+                ),
               ),
             ),
           ),
