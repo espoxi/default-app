@@ -49,7 +49,8 @@ class _ComposerState extends State<Composer> {
                                     decoration: TextDecoration.lineThrough)
                                 : null,
                           ),
-                          Expanded(child: effect.config.preview),
+                          if (!effect.expanded)
+                            Expanded(child: effect.config.preview),
                           IconButton(
                             icon: const Icon(Icons.delete),
                             onPressed: () =>
