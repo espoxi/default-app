@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:json_annotation/json_annotation.dart';
 import 'effect.dart';
 
 class UnknownEffectConfig implements EffectConfig {
@@ -11,4 +10,10 @@ class UnknownEffectConfig implements EffectConfig {
   Map<String, dynamic> toJson() => {name: json};
   @override
   Widget get editor => const Text('Unsupported effect, can\'t edit');
+
+  @override
+  Widget get preview => const SizedBox.shrink();
+
+  @override
+  String get title => "unsupported effect: $name";
 }

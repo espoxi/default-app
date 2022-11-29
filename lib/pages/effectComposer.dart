@@ -40,7 +40,7 @@ class _ComposerState extends State<Composer> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(effect.name),
+                        Text(effect.title),
                         IconButton(
                           icon: const Icon(Icons.delete),
                           onPressed: () =>
