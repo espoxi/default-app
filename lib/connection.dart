@@ -66,6 +66,30 @@ class Connection {
     }
   }
 
+  Future<InternetAddress?> checkConnection(
+    String url, {
+    bool addHtml = true,
+  }) async {
+    try {
+      url = url.trim();
+      var _url = addHtml ? 'http://${url}/' : url;
+      var res =
+          await http.get(Uri.parse('${_url}ip'), headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      });
+      if (res.statusCode == 200) {
+        _address = InternetAddress(jsonDecode(res.body));
+        return _address!;
+      }
+      if (res.statusCode == 500 && res.body == "no ip") {
+        return InternetAddress(url);
+      }
+
+      // ignore: empty_catches
+    } catch (e) {}
+    return null;
+  }
+
   Future<InternetAddress?> connectEspoxiToWifi(Credentials creds) async {
     if (_address != null) {}
 
@@ -84,20 +108,13 @@ class Connection {
 
     for (int i = 0; i < 10; i++) {
       try {
-        var res = await http.get(Uri.parse('${DEFAULTURL}ip')).timeout(
-            Duration(seconds: 2),
-            onTimeout: () => throw Exception('Timeout'));
-        if (res.statusCode == 200) {
-          _address = InternetAddress(jsonDecode(res.body));
-          return _address!;
+        var ip = await checkConnection(DEFAULTURL);
+        if (ip != null) {
+          return ip;
         } else {
-          var res = await http
-              .get(Uri.parse('${(await saverAddress)!.address}ip'))
-              .timeout(Duration(seconds: 2),
-                  onTimeout: () => throw Exception('Timeout'));
-          if (res.statusCode == 200) {
-            _address = InternetAddress(jsonDecode(res.body));
-            return _address!;
+          var ip = await checkConnection((await saverAddress)!.address);
+          if (ip != null) {
+            return ip;
           }
         }
       } catch (e) {}

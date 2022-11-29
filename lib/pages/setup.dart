@@ -3,6 +3,7 @@ import 'package:espoxiapp/config.dart';
 import 'package:espoxiapp/connection.dart';
 import 'package:espoxiapp/data/wifi.dart';
 import 'package:espoxiapp/pages/loading.dart';
+import 'package:espoxiapp/widgets/settings/ip.dart';
 import 'package:flutter/material.dart';
 
 import 'home.dart';
@@ -49,6 +50,8 @@ enum __ActualSetupPageStateState {
 
 class _ActualSetupPageState extends State<ActualSetupPage> {
   bool isOnCredentialView = false;
+  bool isOnAddressView = false;
+  String? address;
   __ActualSetupPageStateState state = __ActualSetupPageStateState.initial;
   String? ssid;
   String? psk;
@@ -86,64 +89,85 @@ class _ActualSetupPageState extends State<ActualSetupPage> {
                 child: Form(
                   key: _formKey,
                   child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 300),
+                    constraints: const BoxConstraints(maxWidth: 400),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    isOnCredentialView = false;
-                                  });
-                                },
-                                icon: Icon(Icons.arrow_back)),
-                            const Text("please enter your wifi credentials"),
+                              onPressed: () {
+                                setState(() {
+                                  isOnCredentialView = false;
+                                  isOnAddressView = false;
+                                });
+                              },
+                              icon: const Icon(Icons.arrow_back),
+                            ),
+                            Expanded(
+                              child: Text(!isOnAddressView
+                                  ? "please enter your wifi credentials"
+                                  : "well then, where is the espoxi?.. \n(press enter when you're done)"),
+                            ),
+                            if (!isOnAddressView)
+                              TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      isOnAddressView = true;
+                                    });
+                                  },
+                                  child: const Text("skip")),
                           ],
                         ),
                         const SizedBox(
                           height: 20,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextFormField(
-                            onSaved: (value) {
-                              ssid = value;
-                            },
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Yo dawg, you need to enter how your wifi is called';
-                              }
-                              return null;
-                            },
-                            textInputAction: TextInputAction.next,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: 'SSID',
+                        if (!isOnAddressView)
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextFormField(
+                              onSaved: (value) {
+                                ssid = value;
+                              },
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Yo dawg, you need to enter how your wifi is called';
+                                }
+                                return null;
+                              },
+                              textInputAction: TextInputAction.next,
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                hintText: 'SSID',
+                              ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextFormField(
-                            onSaved: (value) {
-                              psk = value;
-                            },
-                            validator: (value) {
-                              return null;
-                            },
-                            obscureText: true,
-                            enableSuggestions: false,
-                            autocorrect: false,
-                            textInputAction: TextInputAction.done,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: "Password",
+                        if (!isOnAddressView)
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextFormField(
+                              onSaved: (value) {
+                                psk = value;
+                              },
+                              validator: (value) {
+                                return null;
+                              },
+                              obscureText: true,
+                              enableSuggestions: false,
+                              autocorrect: false,
+                              textInputAction: TextInputAction.done,
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                hintText: "Password",
+                              ),
                             ),
                           ),
-                        ),
+                        if (isOnAddressView)
+                          IPSettings(
+                            key: const ValueKey('address'),
+                            onSaved: onAddressSaved,
+                          ),
                       ],
                     ),
                   ),
@@ -160,21 +184,29 @@ class _ActualSetupPageState extends State<ActualSetupPage> {
     );
   }
 
+  onAddressSaved(value) {
+    address = value;
+    IPSettings.defaultOnSaved(value);
+    done();
+  }
+
   Widget get _indicator {
     switch (state) {
       case __ActualSetupPageStateState.initial:
-        return TextButton(
-          onPressed: () {
-            if (!isOnCredentialView) {
-              setState(() {
-                isOnCredentialView = true;
-              });
-              return;
-            }
-            connectToWifi();
-          },
-          child: const Text("I'm done"),
-        );
+        return (!isOnAddressView)
+            ? TextButton(
+                onPressed: () {
+                  if (!isOnCredentialView) {
+                    setState(() {
+                      isOnCredentialView = true;
+                    });
+                    return;
+                  }
+                  done();
+                },
+                child: const Text("I'm done"),
+              )
+            : const SizedBox.shrink();
       case __ActualSetupPageStateState.loading:
         return const Center(
           child: Padding(
@@ -183,38 +215,48 @@ class _ActualSetupPageState extends State<ActualSetupPage> {
           ),
         );
       case __ActualSetupPageStateState.connected:
-        return Icon(Icons.check, color: Colors.green);
+        return const Icon(Icons.check, color: Colors.green);
       case __ActualSetupPageStateState.failed:
-        return Icon(Icons.close, color: Colors.red);
+        return const Icon(Icons.close, color: Colors.red);
     }
   }
 
-  Future<void> connectToWifi() async {
+  Future<void> done() async {
+    if (isOnAddressView) {
+      setState(() {
+        state = __ActualSetupPageStateState.loading;
+      });
+      if (address == null) {
+        _failed();
+        return;
+      }
+      var _address = await Connection().checkConnection(address!);
+      if (_address == null) {
+        _failed();
+        return;
+      }
+      setState(() {
+        state = __ActualSetupPageStateState.connected;
+      });
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const HomePage()),
+      );
+      return;
+    }
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       setState(() {
         state = __ActualSetupPageStateState.loading;
       });
       if (ssid == null) {
-        setState(() {
-          state = __ActualSetupPageStateState.failed;
-        });
-        await Future.delayed(const Duration(seconds: 1));
-        setState(() {
-          state = __ActualSetupPageStateState.initial;
-        });
+        _failed();
         return;
       }
       var creds = Credentials(ssid: ssid!, psk: psk);
       var address = await Connection().connectEspoxiToWifi(creds);
       if (address == null) {
-        setState(() {
-          state = __ActualSetupPageStateState.failed;
-        });
-        await Future.delayed(const Duration(seconds: 1));
-        setState(() {
-          state = __ActualSetupPageStateState.initial;
-        });
+        _failed();
         return;
       }
       setState(() {
@@ -229,5 +271,16 @@ class _ActualSetupPageState extends State<ActualSetupPage> {
         MaterialPageRoute(builder: (context) => const HomePage()),
       );
     }
+  }
+
+  Future _failed() async {
+    setState(() {
+      state = __ActualSetupPageStateState.failed;
+    });
+    await Future.delayed(const Duration(seconds: 1));
+    setState(() {
+      state = __ActualSetupPageStateState.initial;
+    });
+    return;
   }
 }

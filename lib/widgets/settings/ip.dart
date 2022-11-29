@@ -4,7 +4,12 @@ import 'package:espoxiapp/connection.dart';
 import 'package:flutter/material.dart';
 
 class IPSettings extends StatelessWidget {
-  const IPSettings({super.key});
+  IPSettings({super.key, this.onSaved = IPSettings.defaultOnSaved});
+  Function(String) onSaved;
+
+  static defaultOnSaved(value) {
+    Connection().address = InternetAddress(value);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +19,7 @@ class IPSettings extends StatelessWidget {
         labelText: 'IP Address',
         hintText: Connection().address?.address,
       ),
-      onSubmitted: (value) => Connection().address = InternetAddress(value),
+      onSubmitted: onSaved,
     );
   }
 }
