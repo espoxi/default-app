@@ -13,11 +13,12 @@ abstract class EffectConfig {
 
   Widget get preview;
   factory EffectConfig.fromJson(Map<String, dynamic> json) {
+    var innerJson = json.values.first;
     switch (json.keys.first) {
-      case 'solidColor':
-        return SolidColorConfig.fromInternalJson(json);
+      case SolidColorConfig.name:
+        return SolidColorConfig.fromInternalJson(innerJson);
       default:
-        return UnknownEffectConfig(json.keys.first, json.values.first);
+        return UnknownEffectConfig(json.keys.first, innerJson);
     }
   }
 }

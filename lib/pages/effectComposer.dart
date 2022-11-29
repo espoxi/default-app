@@ -12,14 +12,22 @@ class Composer extends StatefulWidget {
   State<Composer> createState() => _ComposerState();
 }
 
+class EffectState {
+  EffectState(
+      {required this.config, this.enabled = true, this.expanded = false});
+  EffectConfig config;
+  bool expanded;
+  bool enabled;
+}
+
 class _ComposerState extends State<Composer> {
   @override
   void initState() {
     super.initState();
-    effects = widget.effects;
+    effects = widget.effects.map((e) => EffectState(config: e)).toList();
   }
 
-  List<EffectConfig> effects = [];
+  List<EffectState> effects = [];
 
   @override
   Widget build(BuildContext context) {
@@ -30,33 +38,72 @@ class _ComposerState extends State<Composer> {
       ),
       body: ListView(
         children: effects
-            .map(
-              (effect) => Padding(
-                padding: const EdgeInsets.all(18.0),
-                child: Column(
-                  //TODO: add a reorder possibility
-                  //TODO: make beautiful
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            .map((effect) => ExpansionTile(
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            effect.config.title,
+                            style: !effect.enabled
+                                ? const TextStyle(
+                                    decoration: TextDecoration.lineThrough)
+                                : null,
+                          ),
+                          Expanded(child: effect.config.preview),
+                          IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () =>
+                                setState(() => effects.remove(effect)),
+                          ),
+                        ],
+                      ),
+                      onExpansionChanged: (value) =>
+                          setState(() => effect.expanded = value),
                       children: [
-                        Text(effect.title),
-                        IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () =>
-                              setState(() => effects.remove(effect)),
+                        effect.config.editor,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            TextButton(
+                              onPressed: () => setState(
+                                  () => effect.enabled = !effect.enabled),
+                              child:
+                                  Text(effect.enabled ? 'Disable' : 'Enable'),
+                            ),
+                          ],
                         ),
                       ],
-                    ),
-                  ],
-                ),
-              ),
-            )
+                    )
+                // Padding(
+                //   padding: const EdgeInsets.all(18.0),
+                //   child: Column(
+                //     //TODO: add a reorder possibility
+                //     //TODO: make beautiful
+                //     children: [
+                //       Row(
+                //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //         children: [
+                //           Text(effect.title),
+                //           Expanded(child: effect.preview),
+                //           IconButton(
+                //             icon: const Icon(Icons.delete),
+                //             onPressed: () =>
+                //                 setState(() => effects.remove(effect)),
+                //           ),
+                //         ],
+                //       ),
+                //     ],
+                //   ),
+                // ),
+                )
             .toList(),
       ),
       endDrawer: const MainDrawer(),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => widget.onSaved(effects),
+        onPressed: () => widget.onSaved(effects
+            .where((element) => element.enabled)
+            .map((e) => e.config)
+            .toList()),
         tooltip: 'Save',
         child: const Icon(Icons.save),
       ),

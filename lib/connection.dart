@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:espoxiapp/config.dart';
-import 'package:espoxiapp/pages/effectComposer.dart';
 import 'package:http/http.dart' as http;
 import 'package:espoxiapp/data/wifi.dart';
 
@@ -36,7 +35,11 @@ class Connection {
   InternetAddress? get address => _address;
   void set address(InternetAddress? address) {
     _address = address;
-    storeRaw(address.toString(), ADDRESSPATH);
+    if (address != null) {
+      storeRaw(address.address.toString(), ADDRESSPATH);
+    } else {
+      delete(ADDRESSPATH);
+    }
   }
 
   Future<List<EffectConfig>> getEffects() async {
