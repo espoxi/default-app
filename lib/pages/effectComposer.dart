@@ -36,69 +36,46 @@ class _ComposerState extends State<Composer> {
         leading: BackButton(),
         title: const Text('Composer'),
       ),
-      body: ListView(
-        children: effects
+      body: ListView(children: [
+        ...effects
             .map((effect) => ExpansionTile(
-                      title: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            effect.config.title,
-                            style: !effect.enabled
-                                ? const TextStyle(
-                                    decoration: TextDecoration.lineThrough)
-                                : null,
-                          ),
-                          if (!effect.expanded)
-                            Expanded(child: effect.config.preview),
-                          IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () =>
-                                setState(() => effects.remove(effect)),
-                          ),
-                        ],
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        effect.config.title,
+                        style: !effect.enabled
+                            ? const TextStyle(
+                                decoration: TextDecoration.lineThrough)
+                            : null,
                       ),
-                      onExpansionChanged: (value) =>
-                          setState(() => effect.expanded = value),
+                      if (!effect.expanded)
+                        Expanded(child: effect.config.preview),
+                      IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () => setState(() => effects.remove(effect)),
+                      ),
+                    ],
+                  ),
+                  onExpansionChanged: (value) =>
+                      setState(() => effect.expanded = value),
+                  children: [
+                    effect.config.editor,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        effect.config.editor,
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            TextButton(
-                              onPressed: () => setState(
-                                  () => effect.enabled = !effect.enabled),
-                              child:
-                                  Text(effect.enabled ? 'Disable' : 'Enable'),
-                            ),
-                          ],
+                        TextButton(
+                          onPressed: () =>
+                              setState(() => effect.enabled = !effect.enabled),
+                          child: Text(effect.enabled ? 'Disable' : 'Enable'),
                         ),
                       ],
-                    )
-                // Padding(
-                //   padding: const EdgeInsets.all(18.0),
-                //   child: Column(
-                //     //TODO: add a reorder possibility
-                //     //TODO: make beautiful
-                //     children: [
-                //       Row(
-                //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //         children: [
-                //           Text(effect.title),
-                //           Expanded(child: effect.preview),
-                //           IconButton(
-                //             icon: const Icon(Icons.delete),
-                //             onPressed: () =>
-                //                 setState(() => effects.remove(effect)),
-                //           ),
-                //         ],
-                //       ),
-                //     ],
-                //   ),
-                // ),
-                )
+                    ),
+                  ],
+                ))
             .toList(),
-      ),
+        //TODO: add a button to add a new effect to the stack (choose from dropdown)
+      ]),
       endDrawer: const MainDrawer(),
       floatingActionButton: FloatingActionButton(
         onPressed: () => widget.onSaved(effects
