@@ -8,7 +8,8 @@ part of 'solidcolor.dart';
 
 SolidColorConfig _$SolidColorConfigFromJson(Map<String, dynamic> json) =>
     SolidColorConfig(
-      color: _colorFromJson(json['color']),
+      color:
+          json['color'] == null ? Colors.black : _colorFromJson(json['color']),
     );
 
 Map<String, dynamic> _$SolidColorConfigToJson(SolidColorConfig instance) =>
