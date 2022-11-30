@@ -1,7 +1,9 @@
 import 'package:espoxiapp/connection.dart';
+import 'package:espoxiapp/effects/solidcolor.dart';
 import 'package:espoxiapp/widgets/mainDrawer.dart';
 import 'package:flutter/material.dart';
 
+import '../effects/effect.dart';
 import 'effectComposer.dart';
 
 class HomePage extends StatelessWidget {
@@ -28,8 +30,16 @@ class HomePage extends StatelessWidget {
                           }
                           return Composer(
                             effects: snapshot.data ?? [],
-                            onSaved: (configs) =>
-                                Connection().setEffects(configs),
+                            onSaved: (configs) {
+                              var blackBackground =
+                                  SolidColorConfig(color: Colors.black);
+                              blackBackground.range = Range(start: 0, end: 100);
+                              configs.insert(
+                                0,
+                                blackBackground,
+                              );
+                              Connection().setEffects(configs);
+                            },
                           );
                         }),
                   ),

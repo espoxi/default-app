@@ -17,6 +17,9 @@ class Range {
 
   factory Range.fromJson(Map<String, dynamic> json) => _$RangeFromJson(json);
   Map<String, dynamic> toJson() => _$RangeToJson(this);
+  RangeValues toRangeValues() => RangeValues(start.toDouble(), end.toDouble());
+  factory Range.fromRangeValues(RangeValues rangeValues) =>
+      Range(start: rangeValues.start.toInt(), end: rangeValues.end.toInt());
 }
 
 mixin WithRange {

@@ -80,10 +80,27 @@ class _ComposerState extends State<Composer> {
                             children: [
                               effect.config.editor,
                               Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 30.0),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
+                                    Text(
+                                        'From Pixel ${effect.config.range.start} to ${effect.config.range.end}'),
+                                    Expanded(
+                                      child: MyRangeSlider(
+                                        values:
+                                            effect.config.range.toRangeValues(),
+                                        onChanged: (values) => setState(() =>
+                                            effect.config.range =
+                                                Range.fromRangeValues(values)),
+                                      ),
+                                    ),
+                                    const Expanded(
+                                      child: SizedBox(
+                                        width: 100,
+                                      ),
+                                    ),
                                     TextButton(
                                       onPressed: () => setState(() =>
                                           effect.enabled = !effect.enabled),
@@ -121,6 +138,41 @@ class _ComposerState extends State<Composer> {
         tooltip: 'Save',
         child: const Icon(Icons.save),
       ),
+    );
+  }
+}
+
+class MyRangeSlider extends StatefulWidget {
+  const MyRangeSlider(
+      {super.key,
+      this.values = const RangeValues(0, 30),
+      required this.onChanged});
+  final RangeValues values;
+  final Function(RangeValues) onChanged;
+
+  @override
+  State<MyRangeSlider> createState() => _MyRangeSliderState();
+}
+
+class _MyRangeSliderState extends State<MyRangeSlider> {
+  RangeValues _currentRangeValues = const RangeValues(40, 80);
+
+  @override
+  Widget build(BuildContext context) {
+    return RangeSlider(
+      values: _currentRangeValues,
+      min: 0,
+      max: 100,
+      labels: RangeLabels(
+        _currentRangeValues.start.round().toString(),
+        _currentRangeValues.end.round().toString(),
+      ),
+      onChanged: (RangeValues values) {
+        setState(() {
+          _currentRangeValues = values;
+          widget.onChanged(values);
+        });
+      },
     );
   }
 }
