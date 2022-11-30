@@ -10,11 +10,12 @@ SolidColorConfig _$SolidColorConfigFromJson(Map<String, dynamic> json) =>
     SolidColorConfig(
       color:
           json['color'] == null ? Colors.black : _colorFromJson(json['color']),
-    );
+    )..range = Range.fromJson(json['range'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$SolidColorConfigToJson(SolidColorConfig instance) =>
     <String, dynamic>{
       'color': _colorToJson(instance.color),
+      'range': instance.range,
     };
 
 APIColor _$APIColorFromJson(Map<String, dynamic> json) => APIColor(

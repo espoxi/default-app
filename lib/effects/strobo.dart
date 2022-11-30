@@ -5,7 +5,7 @@ import 'effect.dart';
 part 'strobo.g.dart';
 
 @JsonSerializable()
-class StroboConfig implements EffectConfig {
+class StroboConfig with WithRange implements EffectConfig {
   static const String name = 'Strobo';
 
   StroboConfig({required this.frequency_hz});

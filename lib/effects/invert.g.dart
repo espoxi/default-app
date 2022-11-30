@@ -7,7 +7,10 @@ part of 'invert.dart';
 // **************************************************************************
 
 InversionConfig _$InversionConfigFromJson(Map<String, dynamic> json) =>
-    InversionConfig();
+    InversionConfig()
+      ..range = Range.fromJson(json['range'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$InversionConfigToJson(InversionConfig instance) =>
-    <String, dynamic>{};
+    <String, dynamic>{
+      'range': instance.range,
+    };

@@ -5,7 +5,7 @@ import 'effect.dart';
 part 'invert.g.dart';
 
 @JsonSerializable()
-class InversionConfig implements EffectConfig {
+class InversionConfig with WithRange implements EffectConfig {
   static const String name = 'Inversion';
 
   InversionConfig();

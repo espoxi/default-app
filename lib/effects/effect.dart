@@ -7,7 +7,23 @@ import 'solidcolor.dart';
 import 'unknown.dart';
 import 'invert.dart';
 
-abstract class EffectConfig {
+part 'effect.g.dart';
+
+@JsonSerializable()
+class Range {
+  Range({required this.start, required this.end});
+  int start;
+  int end;
+
+  factory Range.fromJson(Map<String, dynamic> json) => _$RangeFromJson(json);
+  Map<String, dynamic> toJson() => _$RangeToJson(this);
+}
+
+mixin WithRange {
+  Range range = Range(start: 0, end: 10);
+}
+
+abstract class EffectConfig with WithRange {
   String get title;
 
   Map<String, dynamic> toJson();

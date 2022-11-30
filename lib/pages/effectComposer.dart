@@ -79,16 +79,20 @@ class _ComposerState extends State<Composer> {
                                 setState(() => effect.expanded = value),
                             children: [
                               effect.config.editor,
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  TextButton(
-                                    onPressed: () => setState(
-                                        () => effect.enabled = !effect.enabled),
-                                    child: Text(
-                                        effect.enabled ? 'Disable' : 'Enable'),
-                                  ),
-                                ],
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    TextButton(
+                                      onPressed: () => setState(() =>
+                                          effect.enabled = !effect.enabled),
+                                      child: Text(effect.enabled
+                                          ? 'Disable'
+                                          : 'Enable'),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ))

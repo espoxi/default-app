@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'effect.dart';
 
-class UnknownEffectConfig implements EffectConfig {
-  const UnknownEffectConfig(this.name, this.json);
+class UnknownEffectConfig with WithRange implements EffectConfig {
+  UnknownEffectConfig(this.name, this.json);
   final String name;
   final dynamic json;
 
