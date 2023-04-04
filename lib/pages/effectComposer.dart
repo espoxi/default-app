@@ -49,69 +49,74 @@ class _ComposerState extends State<Composer> {
                     }),
                 children: [
                   ...effects
-                      .map((effect) => ExpansionTile(
-                            controlAffinity: ListTileControlAffinity.leading,
+                      .map((effect) => AnimatedBuilder(
                             key: ValueKey(effect),
-                            title: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            animation: effect.config,
+                            builder: (context, child) => ExpansionTile(
+                              controlAffinity: ListTileControlAffinity.leading,
+                              title: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    effect.config.title,
+                                    style: !effect.enabled
+                                        ? const TextStyle(
+                                            decoration:
+                                                TextDecoration.lineThrough)
+                                        : null,
+                                  ),
+                                  Expanded(
+                                      child: (!effect.expanded)
+                                          ? effect.config.preview
+                                          : Container()),
+                                  IconButton(
+                                    icon: const Icon(Icons.delete),
+                                    onPressed: () =>
+                                        setState(() => effects.remove(effect)),
+                                  ),
+                                  const SizedBox(width: 20),
+                                ],
+                              ),
+                              onExpansionChanged: (value) =>
+                                  setState(() => effect.expanded = value),
                               children: [
-                                Text(
-                                  effect.config.title,
-                                  style: !effect.enabled
-                                      ? const TextStyle(
-                                          decoration:
-                                              TextDecoration.lineThrough)
-                                      : null,
+                                effect.config.editor(context),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 30.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                          'From Pixel ${effect.config.range.start} to ${effect.config.range.end}'),
+                                      Expanded(
+                                        child: MyRangeSlider(
+                                          values: effect.config.range
+                                              .toRangeValues(),
+                                          onChanged: (values) => setState(() =>
+                                              effect.config.range =
+                                                  Range.fromRangeValues(
+                                                      values)),
+                                        ),
+                                      ),
+                                      const Expanded(
+                                        child: SizedBox(
+                                          width: 100,
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () => setState(() =>
+                                            effect.enabled = !effect.enabled),
+                                        child: Text(effect.enabled
+                                            ? 'Disable'
+                                            : 'Enable'),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                Expanded(
-                                    child: (!effect.expanded)
-                                        ? effect.config.preview
-                                        : Container()),
-                                IconButton(
-                                  icon: const Icon(Icons.delete),
-                                  onPressed: () =>
-                                      setState(() => effects.remove(effect)),
-                                ),
-                                const SizedBox(width: 20),
                               ],
                             ),
-                            onExpansionChanged: (value) =>
-                                setState(() => effect.expanded = value),
-                            children: [
-                              effect.config.editor(context),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 30.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                        'From Pixel ${effect.config.range.start} to ${effect.config.range.end}'),
-                                    Expanded(
-                                      child: MyRangeSlider(
-                                        values:
-                                            effect.config.range.toRangeValues(),
-                                        onChanged: (values) => setState(() =>
-                                            effect.config.range =
-                                                Range.fromRangeValues(values)),
-                                      ),
-                                    ),
-                                    const Expanded(
-                                      child: SizedBox(
-                                        width: 100,
-                                      ),
-                                    ),
-                                    TextButton(
-                                      onPressed: () => setState(() =>
-                                          effect.enabled = !effect.enabled),
-                                      child: Text(effect.enabled
-                                          ? 'Disable'
-                                          : 'Enable'),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
                           ))
                       .toList(),
                 ]),
@@ -155,7 +160,13 @@ class MyRangeSlider extends StatefulWidget {
 }
 
 class _MyRangeSliderState extends State<MyRangeSlider> {
-  RangeValues _currentRangeValues = const RangeValues(40, 80);
+  RangeValues _currentRangeValues = const RangeValues(0, 30);
+
+  @override
+  void initState() {
+    _currentRangeValues = widget.values;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

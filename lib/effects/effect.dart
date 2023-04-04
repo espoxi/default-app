@@ -27,7 +27,7 @@ mixin WithRange {
   Range range = Range(start: 0, end: 10);
 }
 
-abstract class EffectConfig with WithRange {
+abstract class EffectConfig with WithRange, ChangeNotifier {
   String get title;
 
   Map<String, dynamic> toJson();

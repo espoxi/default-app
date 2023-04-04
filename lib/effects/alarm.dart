@@ -33,7 +33,7 @@ DateTime _timeFromJson(int time) => DateTime.fromMillisecondsSinceEpoch(time);
 int _timeToJson(DateTime time) => time.millisecondsSinceEpoch;
 
 @JsonSerializable()
-class AlarmConfig with WithRange implements EffectConfig {
+class AlarmConfig with WithRange, ChangeNotifier implements EffectConfig {
   static const String name = 'Alarm';
 
   AlarmConfig({this.alarm_type = AlarmType.Sunrise, required this.ringAt});
@@ -59,6 +59,7 @@ class AlarmConfig with WithRange implements EffectConfig {
               value: alarm_type,
               onChanged: (AlarmType? newValue) {
                 alarm_type = newValue!;
+                notifyListeners();
               },
               items: AlarmType.values
                   .map<DropdownMenuItem<AlarmType>>((AlarmType value) {
@@ -82,6 +83,7 @@ class AlarmConfig with WithRange implements EffectConfig {
                     // },
                     onConfirm: (date) {
                       ringAt = date;
+                      notifyListeners();
                     },
                     currentTime: DateTime.now(),
                   );
@@ -104,8 +106,8 @@ class AlarmConfig with WithRange implements EffectConfig {
         ),
       );
 
-  Widget get text =>
-      Text('${weekDayNames[ringAt.weekday]}  ${ringAt.hour}:${ringAt.minute}');
+  Widget get text => Text(
+      '${weekDayNames[ringAt.weekday]}  ${ringAt.hour.toString().padLeft(2, '0')}:${ringAt.minute.toString().padLeft(2, '0')}');
 
   @override
   String get title => "Alarm";

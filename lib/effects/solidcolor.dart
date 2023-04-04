@@ -6,7 +6,7 @@ import 'effect.dart';
 part 'solidcolor.g.dart';
 
 @JsonSerializable()
-class SolidColorConfig with WithRange implements EffectConfig {
+class SolidColorConfig with WithRange, ChangeNotifier implements EffectConfig {
   SolidColorConfig({this.color = Colors.black});
 
   static const String name = 'SolidColor';

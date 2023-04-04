@@ -7,7 +7,7 @@ import 'effect.dart';
 part 'hue.g.dart';
 
 @JsonSerializable()
-class HueShiftConfig with WithRange implements EffectConfig {
+class HueShiftConfig with WithRange, ChangeNotifier implements EffectConfig {
   static const String name = 'HueShift';
 
   HueShiftConfig(
