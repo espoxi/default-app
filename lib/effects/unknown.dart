@@ -9,7 +9,8 @@ class UnknownEffectConfig with WithRange implements EffectConfig {
   @override
   Map<String, dynamic> toJson() => {name: json};
   @override
-  Widget get editor => const Text('Unsupported effect, can\'t edit');
+  Widget editor(BuildContext context) =>
+      const Text('Unsupported effect, can\'t edit');
 
   @override
   Widget get preview => const SizedBox.shrink();

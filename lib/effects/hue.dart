@@ -21,7 +21,7 @@ class HueShiftConfig with WithRange implements EffectConfig {
 
   @override
   //Thats ugly, see #3
-  Widget get editor => _HueShiftEditor(
+  Widget editor(BuildContext context) => _HueShiftEditor(
         degrees_per_led: degrees_per_led,
         degrees_per_second: degrees_per_second,
         onValueChanged: (double degrees_per_led, double degrees_per_second) {

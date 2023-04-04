@@ -31,7 +31,7 @@ abstract class EffectConfig with WithRange {
 
   Map<String, dynamic> toJson();
 
-  Widget get editor;
+  Widget editor(BuildContext context);
 
   Widget get preview;
   factory EffectConfig.fromJson(Map<String, dynamic> json) {

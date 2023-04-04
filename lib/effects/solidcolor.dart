@@ -20,7 +20,7 @@ class SolidColorConfig with WithRange implements EffectConfig {
       _$SolidColorConfigFromJson(json);
 
   @override
-  Widget get editor => ColorPicker(
+  Widget editor(BuildContext context) => ColorPicker(
         pickerColor: color,
         paletteType: PaletteType.hueWheel,
         onColorChanged: (Color value) {

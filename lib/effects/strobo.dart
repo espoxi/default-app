@@ -19,7 +19,7 @@ class StroboConfig with WithRange implements EffectConfig {
 
   @override
   //Thats ugly, see #3
-  Widget get editor => _StroboEditor(
+  Widget editor(BuildContext context) => _StroboEditor(
         frequency_hz: frequency_hz,
         onValueChanged: (double frequency_hz) {
           this.frequency_hz = frequency_hz;

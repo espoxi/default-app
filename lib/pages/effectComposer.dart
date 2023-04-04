@@ -78,7 +78,7 @@ class _ComposerState extends State<Composer> {
                             onExpansionChanged: (value) =>
                                 setState(() => effect.expanded = value),
                             children: [
-                              effect.config.editor,
+                              effect.config.editor(context),
                               Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 30.0),

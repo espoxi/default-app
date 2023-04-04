@@ -16,7 +16,7 @@ class InversionConfig with WithRange implements EffectConfig {
       _$InversionConfigFromJson(json);
 
   @override
-  Widget get editor => const SizedBox.shrink();
+  Widget editor(BuildContext context) => const SizedBox.shrink();
 
   @override
   Widget get preview => const SizedBox.shrink();
