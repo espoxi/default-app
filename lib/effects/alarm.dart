@@ -53,48 +53,48 @@ class AlarmConfig with WithRange, ChangeNotifier implements EffectConfig {
       _$AlarmConfigFromJson(json);
 
   @override
-  Widget editor(BuildContext context) => Column(
-        children: [
-          DropdownButton<AlarmType>(
-              value: alarm_type,
-              onChanged: (AlarmType? newValue) {
-                alarm_type = newValue!;
-                notifyListeners();
-              },
-              items: AlarmType.values
-                  .map<DropdownMenuItem<AlarmType>>((AlarmType value) {
-                return DropdownMenuItem<AlarmType>(
-                  value: value,
-                  child: Text(value.name),
-                );
-              }).toList()),
-          Row(
-            children: [
-              text,
-              TextButton(
-                onPressed: () {
-                  DatePicker.showDateTimePicker(
-                    context,
-                    showTitleActions: true,
-                    minTime: DateTime.now(),
-                    maxTime: DateTime.now().add(const Duration(days: 365)),
-                    // onChanged: (date) {
+  Widget editor(BuildContext context) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 50.0),
+        child: Row(
+          children: [
+            text,
+            TextButton(
+              onPressed: () {
+                DatePicker.showDateTimePicker(
+                  context,
+                  showTitleActions: true,
+                  minTime: DateTime.now(),
+                  maxTime: DateTime.now().add(const Duration(days: 365)),
+                  // onChanged: (date) {
 
-                    // },
-                    onConfirm: (date) {
-                      ringAt = date;
-                      notifyListeners();
-                    },
-                    currentTime: DateTime.now(),
-                  );
-                },
-                child: const Text(
-                  "change",
-                ),
+                  // },
+                  onConfirm: (date) {
+                    ringAt = date;
+                    notifyListeners();
+                  },
+                  currentTime: DateTime.now(),
+                );
+              },
+              child: const Text(
+                "change",
               ),
-            ],
-          ),
-        ],
+            ),
+            const Spacer(),
+            DropdownButton<AlarmType>(
+                value: alarm_type,
+                onChanged: (AlarmType? newValue) {
+                  alarm_type = newValue!;
+                  notifyListeners();
+                },
+                items: AlarmType.values
+                    .map<DropdownMenuItem<AlarmType>>((AlarmType value) {
+                  return DropdownMenuItem<AlarmType>(
+                    value: value,
+                    child: Text(value.name),
+                  );
+                }).toList()),
+          ],
+        ),
       );
 
   @override
