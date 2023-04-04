@@ -1,3 +1,7 @@
+// ignore_for_file: non_constant_identifier_names, constant_identifier_names
+
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -7,37 +11,40 @@ import 'effect.dart';
 part 'alarm.g.dart';
 
 enum AlarmType {
-  sunrise,
-  silvester,
-  strobo,
+  Sunrise,
+  Silvester,
+  Strobo,
 }
 
 extension AlarmTypeExtension on AlarmType {
   String get name {
     switch (this) {
-      case AlarmType.sunrise:
+      case AlarmType.Sunrise:
         return "Sunrise";
-      case AlarmType.silvester:
+      case AlarmType.Silvester:
         return "Silvester";
-      case AlarmType.strobo:
+      case AlarmType.Strobo:
         return "Strobo";
     }
   }
 }
 
-DateTime _timeFromJson(String time) =>
-    DateTime.fromMillisecondsSinceEpoch(int.parse(time));
-String _timeToJson(DateTime time) => time.millisecondsSinceEpoch.toString();
+DateTime _timeFromJson(int time) => DateTime.fromMillisecondsSinceEpoch(time);
+int _timeToJson(DateTime time) => time.millisecondsSinceEpoch;
 
 @JsonSerializable()
 class AlarmConfig with WithRange implements EffectConfig {
   static const String name = 'Alarm';
 
-  AlarmConfig({this.alarmType = AlarmType.sunrise, required this.ringAt});
+  AlarmConfig({this.alarm_type = AlarmType.Sunrise, required this.ringAt});
 
-  AlarmType alarmType;
+  AlarmType alarm_type;
 
-  @JsonKey(fromJson: _timeFromJson, toJson: _timeToJson)
+  @JsonKey(
+    name: "at_ms_since_1970",
+    fromJson: _timeFromJson,
+    toJson: _timeToJson,
+  )
   DateTime ringAt;
 
   @override
@@ -48,11 +55,10 @@ class AlarmConfig with WithRange implements EffectConfig {
   @override
   Widget editor(BuildContext context) => Column(
         children: [
-          Text("Alarm"),
           DropdownButton<AlarmType>(
-              value: alarmType,
+              value: alarm_type,
               onChanged: (AlarmType? newValue) {
-                alarmType = newValue!;
+                alarm_type = newValue!;
               },
               items: AlarmType.values
                   .map<DropdownMenuItem<AlarmType>>((AlarmType value) {
@@ -63,10 +69,10 @@ class AlarmConfig with WithRange implements EffectConfig {
               }).toList()),
           Row(
             children: [
-              preview,
+              text,
               TextButton(
                 onPressed: () {
-                  DatePicker.showDatePicker(
+                  DatePicker.showDateTimePicker(
                     context,
                     showTitleActions: true,
                     minTime: DateTime.now(),
@@ -90,9 +96,27 @@ class AlarmConfig with WithRange implements EffectConfig {
       );
 
   @override
-  Widget get preview =>
-      Text('${ringAt.weekday}  ${ringAt.hour}:${ringAt.minute}');
+  Widget get preview => Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Align(
+          alignment: Alignment.centerRight,
+          child: text,
+        ),
+      );
+
+  Widget get text =>
+      Text('${weekDayNames[ringAt.weekday]}  ${ringAt.hour}:${ringAt.minute}');
 
   @override
   String get title => "Alarm";
 }
+
+const weekDayNames = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday"
+];

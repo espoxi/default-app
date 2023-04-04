@@ -6,6 +6,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'solidcolor.dart';
 import 'unknown.dart';
 import 'invert.dart';
+import 'alarm.dart';
 
 part 'effect.g.dart';
 
@@ -45,6 +46,8 @@ abstract class EffectConfig with WithRange {
         return InversionConfig.fromInternalJson(innerJson);
       case StroboConfig.name:
         return StroboConfig.fromInternalJson(innerJson);
+      case AlarmConfig.name:
+        return AlarmConfig.fromInternalJson(innerJson);
       default:
         return UnknownEffectConfig(json.keys.first, innerJson);
     }
@@ -60,6 +63,9 @@ abstract class EffectConfig with WithRange {
         return InversionConfig();
       case StroboConfig.name:
         return StroboConfig(frequency_hz: 1.0);
+      case AlarmConfig.name:
+        return AlarmConfig(
+            ringAt: DateTime.now().add(const Duration(minutes: 1)));
       default:
         return UnknownEffectConfig(name, null);
     }
@@ -71,4 +77,5 @@ List<String> get allEffectNames => [
       HueShiftConfig.name,
       InversionConfig.name,
       StroboConfig.name,
+      AlarmConfig.name,
     ];
