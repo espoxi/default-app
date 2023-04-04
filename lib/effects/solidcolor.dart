@@ -53,6 +53,9 @@ class SolidColorConfig with WithRange, ChangeNotifier implements EffectConfig {
   String get title => "Solid Base Color";
 }
 
+const default_is_i =
+    true; //XXX: this depends on the rust backend whether we send colors as u8- or f32-tuple
+
 @JsonSerializable()
 class APIColor {
   APIColor(this.red, this.green, this.blue);
@@ -60,9 +63,13 @@ class APIColor {
   num green;
   num blue;
   factory APIColor.fromColor(Color color) {
+    if (default_is_i) return APIColor(color.red, color.green, color.blue);
     return APIColor(color.red / 255, color.green / 255, color.blue / 255);
   }
   Color toColor() {
+    if (default_is_i) {
+      return Color.fromARGB(255, red.toInt(), green.toInt(), blue.toInt());
+    }
     return Color.fromARGB(
         255, (red * 255).toInt(), (green * 255).toInt(), (blue * 255).toInt());
   }
