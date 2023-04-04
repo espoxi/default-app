@@ -54,7 +54,7 @@ class SolidColorConfig with WithRange, ChangeNotifier implements EffectConfig {
 }
 
 const default_is_i =
-    true; //XXX: this depends on the rust backend whether we send colors as u8- or f32-tuple
+    false; //XXX: this depends on the rust backend whether we send colors as u8- or f32-tuple
 
 @JsonSerializable()
 class APIColor {
